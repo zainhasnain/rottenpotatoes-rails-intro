@@ -8,20 +8,22 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    if !params[:order].nil?
-      order = params[:order]
+    
+    order = params[:order]
+    if !order.nil?
+      session[:order] = order
     else
-      order = nil
+      order = session[:order]
     end
     
     if order == "title"
-      @title_header = "hilite p-3 mb-2 bg-warning text-dark"
+      @title_header = "hilite bg-warning"
     elsif order == "release_date"
-      @date_header = "hilite p-3 mb-2 bg-warning text-dark"
+      @date_header = "hilite bg-warning"
     end
     
     if params[:ratings].nil?
-      @ratings_to_show = []
+      @ratings_to_show = @all_ratings
     else
       @ratings_to_show = params[:ratings].keys
     end
