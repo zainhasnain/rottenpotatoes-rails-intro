@@ -8,6 +8,8 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
+    persist_ratings = false
+    persist_order = false
     
     order = params[:order]
     if !order.nil?
@@ -22,11 +24,18 @@ class MoviesController < ApplicationController
       @date_header = "hilite bg-warning"
     end
     
-    if params[:ratings].nil?
-      @ratings_to_show = @all_ratings
+    ratings = params[:ratings]
+    if !ratings.nil?
+      @ratings_to_show = ratings.keys
+      session[:ratings] = ratings
     else
-      @ratings_to_show = params[:ratings].keys
+      if !session[:ratings].nil?
+        @ratings_to_show = session[:ratings].keys
+      else
+        @ratings_to_show = @all_ratings
+      end
     end
+    
     @movies = Movie.with_ratings(@ratings_to_show, order)
   end
 
