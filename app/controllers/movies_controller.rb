@@ -35,8 +35,11 @@ class MoviesController < ApplicationController
         @ratings_to_show = @all_ratings
       end
     end
-    
-    @movies = Movie.with_ratings(@ratings_to_show, order)
+    if params[:ratings].nil? and params[:order].nil?
+      redirect_to(movies_path("order": order, "ratings": Hash[@ratings_to_show.map {|x| [x, '1'] }]))
+    else
+      @movies = Movie.with_ratings(@ratings_to_show, order)
+    end
   end
 
   def new
